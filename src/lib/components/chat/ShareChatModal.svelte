@@ -4,6 +4,7 @@
 
 	import { toast } from 'svelte-sonner';
 	import { deleteSharedChatById, getChatById, shareChatById } from '$lib/apis/chats';
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { copyToClipboard } from '$lib/utils';
 
 	import Modal from '../common/Modal.svelte';
@@ -19,7 +20,7 @@
 		const _chat = chat;
 
 		const sharedChat = await shareChatById(localStorage.token, chatId);
-		shareUrl = `${window.location.origin}/s/${sharedChat.id}`;
+		shareUrl = `${window.location.origin}${WEBUI_BASE_PATH}/s/${sharedChat.id}`;
 		console.log(shareUrl);
 		chat = await getChatById(localStorage.token, chatId);
 
@@ -107,7 +108,7 @@
 			<div class="px-5 pt-4 pb-5 w-full flex flex-col justify-center">
 				<div class=" text-sm dark:text-gray-300 mb-1">
 					{#if chat.share_id}
-						<a href="/s/{chat.share_id}" target="_blank"
+						<a href="{WEBUI_BASE_PATH}/s/{chat.share_id}" target="_blank"
 							>{$i18n.t('You have shared this chat')}
 							<span class=" underline">{$i18n.t('before')}</span>.</a
 						>

@@ -9,7 +9,7 @@
 
 	import type { Writable } from 'svelte/store';
 	import type { i18n as i18nType } from 'i18next';
-	import { OLLAMA_API_BASE_URL, OPENAI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+	import { OLLAMA_API_BASE_URL, OPENAI_API_BASE_URL, WEBUI_BASE_PATH, WEBUI_BASE_URL } from '$lib/constants';
 
 	import {
 		chatId,
@@ -130,7 +130,7 @@
 				const chatInput = document.getElementById('chat-textarea');
 				chatInput?.focus();
 			} else {
-				await goto('/');
+				await goto(`${WEBUI_BASE_PATH}/`);
 			}
 		})();
 	}
@@ -217,7 +217,7 @@
 			});
 		} else {
 			if (!($settings.saveChatHistory ?? true)) {
-				await goto('/');
+				await goto(`${WEBUI_BASE_PATH}/`);
 			}
 		}
 
@@ -233,7 +233,7 @@
 	//////////////////////////
 
 	const initNewChat = async () => {
-		window.history.replaceState(history.state, '', `/`);
+		window.history.replaceState(history.state, '', `${WEBUI_BASE_PATH}/`);
 		await chatId.set('');
 
 		autoScroll = true;
@@ -285,7 +285,7 @@
 	const loadChat = async () => {
 		chatId.set(chatIdProp);
 		chat = await getChatById(localStorage.token, $chatId).catch(async (error) => {
-			await goto('/');
+			await goto(`${WEBUI_BASE_PATH}/`);
 			return null;
 		});
 
@@ -915,7 +915,7 @@
 		}
 
 		if (messages.length == 2 && messages.at(1).content !== '') {
-			window.history.replaceState(history.state, '', `/c/${_chatId}`);
+			window.history.replaceState(history.state, '', `${WEBUI_BASE_PATH}/c/${_chatId}`);
 			const _title = await generateChatTitle(userPrompt);
 			await setChatTitle(_chatId, _title);
 		}
@@ -1176,7 +1176,7 @@
 		}
 
 		if (messages.length == 2) {
-			window.history.replaceState(history.state, '', `/c/${_chatId}`);
+			window.history.replaceState(history.state, '', `${WEBUI_BASE_PATH}/c/${_chatId}`);
 
 			const _title = await generateChatTitle(userPrompt);
 			await setChatTitle(_chatId, _title);

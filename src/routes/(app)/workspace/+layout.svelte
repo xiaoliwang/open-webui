@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, getContext } from 'svelte';
 
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { WEBUI_NAME, showSidebar, functions } from '$lib/stores';
 	import MenuLines from '$lib/components/icons/MenuLines.svelte';
 	import { page } from '$app/stores';
@@ -51,21 +52,21 @@
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/models')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/models">{$i18n.t('Models')}</a
+				href="{WEBUI_BASE_PATH}/workspace/models">{$i18n.t('Models')}</a
 			>
 
 			<a
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/prompts')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/prompts">{$i18n.t('Prompts')}</a
+				href="{WEBUI_BASE_PATH}/workspace/prompts">{$i18n.t('Prompts')}</a
 			>
 
 			<a
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/documents')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/documents"
+				href="{WEBUI_BASE_PATH}/workspace/documents"
 			>
 				{$i18n.t('Documents')}
 			</a>
@@ -74,7 +75,7 @@
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/tools')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/tools"
+				href="{WEBUI_BASE_PATH}/workspace/tools"
 			>
 				{$i18n.t('Tools')}
 			</a>
@@ -83,7 +84,7 @@
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/functions')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/functions"
+				href="{WEBUI_BASE_PATH}/workspace/functions"
 			>
 				{$i18n.t('Functions')}
 			</a>

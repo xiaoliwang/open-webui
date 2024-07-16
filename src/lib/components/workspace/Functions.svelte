@@ -3,6 +3,7 @@
 	import fileSaver from 'file-saver';
 	const { saveAs } = fileSaver;
 
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { WEBUI_NAME, functions, models } from '$lib/stores';
 	import { onMount, getContext, tick } from 'svelte';
 	import { createNewPrompt, deletePromptByCommand, getPrompts } from '$lib/apis/prompts';
@@ -83,7 +84,7 @@
 				id: `${_function.id}_clone`,
 				name: `${_function.name} (Clone)`
 			});
-			goto('/workspace/functions/create');
+			goto(`${WEBUI_BASE_PATH}/workspace/functions/create`);
 		}
 	};
 
@@ -168,7 +169,7 @@
 	<div>
 		<a
 			class=" px-2 py-2 rounded-xl border border-gray-200 dark:border-gray-600 dark:border-0 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition font-medium text-sm flex items-center space-x-1"
-			href="/workspace/functions/create"
+			href="{WEBUI_BASE_PATH}/workspace/functions/create"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +195,7 @@
 		>
 			<a
 				class=" flex flex-1 space-x-3.5 cursor-pointer w-full"
-				href={`/workspace/functions/edit?id=${encodeURIComponent(func.id)}`}
+				href={`${WEBUI_BASE_PATH}/workspace/functions/edit?id=${encodeURIComponent(func.id)}`}
 			>
 				<div class="flex items-center text-left">
 					<div class=" flex-1 self-center pl-1">
@@ -278,7 +279,7 @@
 				<FunctionMenu
 					{func}
 					editHandler={() => {
-						goto(`/workspace/functions/edit?id=${encodeURIComponent(func.id)}`);
+						goto(`${WEBUI_BASE_PATH}/workspace/functions/edit?id=${encodeURIComponent(func.id)}`);
 					}}
 					shareHandler={() => {
 						shareHandler(func);

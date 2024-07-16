@@ -4,6 +4,7 @@
 
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { functions, models } from '$lib/stores';
 	import { updateFunctionById, getFunctions, getFunctionById } from '$lib/apis/functions';
 
@@ -59,7 +60,7 @@
 		if (id) {
 			func = await getFunctionById(localStorage.token, id).catch((error) => {
 				toast.error(error);
-				goto('/workspace/functions');
+				goto(`${WEBUI_BASE_PATH}/workspace/functions`);
 				return null;
 			});
 

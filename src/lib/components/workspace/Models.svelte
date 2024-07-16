@@ -7,6 +7,7 @@
 
 	import { onMount, getContext, tick } from 'svelte';
 
+	import { WEBUI_BASE_PATH, WEBUI_BASE_URL } from '$lib/constants';
 	import { WEBUI_NAME, mobile, models, settings, user } from '$lib/stores';
 	import { addNewModel, deleteModelById, getModelInfos, updateModelById } from '$lib/apis/models';
 
@@ -65,7 +66,7 @@
 				id: `${model.id}-clone`,
 				name: `${model.name} (Clone)`
 			});
-			goto('/workspace/models/create');
+			goto(`${WEBUI_BASE_PATH}/workspace/models/create`);
 		}
 	};
 
@@ -238,7 +239,7 @@
 	<div>
 		<a
 			class=" px-2 py-2 rounded-xl border border-gray-200 dark:border-gray-600 dark:border-0 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition font-medium text-sm flex items-center space-x-1"
-			href="/workspace/models/create"
+			href="{WEBUI_BASE_PATH}/workspace/models/create"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -255,7 +256,7 @@
 </div>
 <hr class=" dark:border-gray-850 my-2.5" />
 
-<a class=" flex space-x-4 cursor-pointer w-full mb-2 px-3 py-2" href="/workspace/models/create">
+<a class=" flex space-x-4 cursor-pointer w-full mb-2 px-3 py-2" href="{WEBUI_BASE_PATH}/workspace/models/create">
 	<div class=" self-center w-10 flex-shrink-0">
 		<div
 			class="w-full h-10 flex justify-center rounded-full bg-transparent dark:bg-gray-700 border border-dashed border-gray-200"
@@ -297,7 +298,7 @@
 							: ''} "
 					>
 						<img
-							src={model?.info?.meta?.profile_image_url ?? '/static/favicon.png'}
+							src={model?.info?.meta?.profile_image_url ?? `${WEBUI_BASE_URL}/static/favicon.png`}
 							alt="modelfile profile"
 							class=" rounded-full w-full h-auto object-cover"
 						/>
@@ -317,7 +318,7 @@
 				<a
 					class="self-center w-fit text-sm px-2 py-2 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
 					type="button"
-					href={`/workspace/models/edit?id=${encodeURIComponent(model.id)}`}
+					href={`${WEBUI_BASE_PATH}/workspace/models/edit?id=${encodeURIComponent(model.id)}`}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
