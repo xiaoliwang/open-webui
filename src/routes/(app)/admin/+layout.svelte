@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, getContext } from 'svelte';
 
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { WEBUI_NAME, showSidebar } from '$lib/stores';
 	import MenuLines from '$lib/components/icons/MenuLines.svelte';
 	import { page } from '$app/stores';
@@ -46,21 +47,21 @@
 				class="min-w-fit rounded-lg p-1.5 px-3 {['/admin', '/admin/'].includes($page.url.pathname)
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/admin">{$i18n.t('Dashboard')}</a
+				href="{WEBUI_BASE_PATH}/admin">{$i18n.t('Dashboard')}</a
 			>
 
 			<a
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/admin/settings')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/admin/settings">{$i18n.t('Settings')}</a
+				href="{WEBUI_BASE_PATH}/admin/settings">{$i18n.t('Settings')}</a
 			>
 
 			<!-- <a
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/documents')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/documents"
+				href="{WEBUI_BASE_PATH}/workspace/documents"
 			>
 				{$i18n.t('Documents')}
 			</a>
@@ -69,7 +70,7 @@
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/playground')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/playground">{$i18n.t('Playground')}</a
+				href="{WEBUI_BASE_PATH}/workspace/playground">{$i18n.t('Playground')}</a
 			> -->
 		</div>
 	</div>

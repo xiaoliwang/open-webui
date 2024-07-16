@@ -2,6 +2,7 @@
 	import fileSaver from 'file-saver';
 	const { saveAs } = fileSaver;
 
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { chats, user, settings } from '$lib/stores';
 
 	import {
@@ -73,7 +74,7 @@
 	};
 
 	const archiveAllChatsHandler = async () => {
-		await goto('/');
+		await goto(`${WEBUI_BASE_PATH}/`);
 		await archiveAllChats(localStorage.token).catch((error) => {
 			toast.error(error);
 		});
@@ -81,7 +82,7 @@
 	};
 
 	const deleteAllChatsHandler = async () => {
-		await goto('/');
+		await goto(`${WEBUI_BASE_PATH}/`);
 		await deleteAllChats(localStorage.token).catch((error) => {
 			toast.error(error);
 		});
@@ -93,7 +94,7 @@
 		console.log(saveChatHistory);
 
 		if (saveChatHistory === false) {
-			await goto('/');
+			await goto(`${WEBUI_BASE_PATH}/`);
 		}
 		saveSettings({ saveChatHistory: saveChatHistory });
 	};

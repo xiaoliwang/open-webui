@@ -2,6 +2,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
+	import { WEBUI_BASE_PATH, WEBUI_BASE_URL } from '$lib/constants';
 	import { settings, user, config, models, tools, functions } from '$lib/stores';
 
 	import TurndownService from 'turndown';
@@ -136,7 +137,7 @@
 				...info,
 				meta: {
 					...info.meta,
-					profile_image_url: info.meta.profile_image_url ?? '/static/favicon.png',
+					profile_image_url: info.meta.profile_image_url ?? `${WEBUI_BASE_URL}/static/favicon.png`,
 					suggestion_prompts: info.meta.suggestion_prompts
 						? info.meta.suggestion_prompts.filter((prompt) => prompt.content !== '')
 						: null
@@ -147,7 +148,7 @@
 			if (res) {
 				await models.set(await getModels(localStorage.token));
 				toast.success($i18n.t('Model created successfully!'));
-				await goto('/workspace/models');
+				await goto(`${WEBUI_BASE_PATH}/workspace/models`);
 			}
 		}
 
@@ -320,7 +321,7 @@
 	<button
 		class="flex space-x-1"
 		on:click={() => {
-			goto('/workspace/models');
+			goto(`${WEBUI_BASE_PATH}/workspace/models`);
 		}}
 	>
 		<div class=" self-center">

@@ -2,6 +2,7 @@
 	import { toast } from 'svelte-sonner';
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import { onMount, getContext, createEventDispatcher, tick } from 'svelte';
+    import { WEBUI_BASE_PATH } from '$lib/constants';
 	const i18n = getContext('i18n');
 
 	const dispatch = createEventDispatcher();
@@ -52,7 +53,7 @@
 		});
 
 		if (res) {
-			goto(`/c/${res.id}`);
+			goto(`${WEBUI_BASE_PATH}/c/${res.id}`);
 			await chats.set(await getChatList(localStorage.token));
 			await pinnedChats.set(await getChatListByTagName(localStorage.token, 'pinned'));
 		}
@@ -93,7 +94,7 @@
 				: selected
 				? 'bg-gray-100 dark:bg-gray-950'
 				: ' group-hover:bg-gray-100 dark:group-hover:bg-gray-950'}  whitespace-nowrap text-ellipsis"
-			href="/c/{chat.id}"
+			href="{WEBUI_BASE_PATH}/c/{chat.id}"
 			on:click={() => {
 				dispatch('select');
 

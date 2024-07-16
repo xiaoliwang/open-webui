@@ -29,7 +29,7 @@
 
 	import 'tippy.js/dist/tippy.css';
 
-	import { WEBUI_BASE_URL, WEBUI_HOSTNAME } from '$lib/constants';
+	import { WEBUI_BASE_PATH, WEBUI_BASE_URL, WEBUI_HOSTNAME } from '$lib/constants';
 	import i18n, { initI18n, getLanguages } from '$lib/i18n';
 	import { bestMatchingLanguage } from '$lib/utils';
 
@@ -111,7 +111,7 @@
 
 			if ($config) {
 				const _socket = io(`${WEBUI_BASE_URL}`, {
-					path: '/ws/socket.io',
+					path: `${WEBUI_BASE_PATH}/ws/socket.io`,
 					auth: { token: localStorage.token }
 				});
 
@@ -144,19 +144,19 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-						await goto('/auth');
+						await goto(`${WEBUI_BASE_PATH}/auth`);
 					}
 				} else {
 					// Don't redirect if we're already on the auth page
 					// Needed because we pass in tokens from OAuth logins via URL fragments
-					if ($page.url.pathname !== '/auth') {
-						await goto('/auth');
+					if ($page.url.pathname !== `${WEBUI_BASE_PATH}/auth`) {
+						await goto(`${WEBUI_BASE_PATH}/auth`);
 					}
 				}
 			}
 		} else {
 			// Redirect to /error when Backend Not Detected
-			await goto(`/error`);
+			await goto(`${WEBUI_BASE_PATH}/error`);
 		}
 
 		await tick();

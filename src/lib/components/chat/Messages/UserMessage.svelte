@@ -9,6 +9,7 @@
 
 	import { user as _user } from '$lib/stores';
 	import { getFileContentById } from '$lib/apis/files';
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 
 	const i18n = getContext('i18n');
 
@@ -61,8 +62,8 @@
 	{#if !($settings?.chatBubble ?? true)}
 		<ProfileImage
 			src={message.user
-				? $models.find((m) => m.id === message.user)?.info?.meta?.profile_image_url ?? '/user.png'
-				: user?.profile_image_url ?? '/user.png'}
+				? $models.find((m) => m.id === message.user)?.info?.meta?.profile_image_url ?? `${WEBUI_BASE_PATH}/user.png`
+				: user?.profile_image_url ?? `${WEBUI_BASE_PATH}/user.png`}
 		/>
 	{/if}
 	<div class="w-full overflow-hidden pl-1">

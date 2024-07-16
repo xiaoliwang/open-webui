@@ -7,6 +7,7 @@
 
 	import { goto } from '$app/navigation';
 
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { getModels as _getModels } from '$lib/apis';
 	import { getAllChatTags } from '$lib/apis/chats';
 
@@ -51,7 +52,7 @@
 
 	onMount(async () => {
 		if ($user === undefined) {
-			await goto('/auth');
+			await goto(`${WEBUI_BASE_PATH}/auth`);
 		} else if (['user', 'admin'].includes($user.role)) {
 			try {
 				// Check if IndexedDB exists

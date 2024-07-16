@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getContext, tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
+	import { WEBUI_BASE_PATH } from '$lib/constants';
 	import { models, settings, user } from '$lib/stores';
 	import { updateUserSettings } from '$lib/apis/users';
 	import { getModels as _getModels } from '$lib/apis';
@@ -271,7 +272,7 @@
 							? 'bg-gray-200 dark:bg-gray-800'
 							: ' hover:bg-gray-100 dark:hover:bg-gray-850'}"
 						on:click={async () => {
-							await goto('/admin/settings');
+							await goto(`${WEBUI_BASE_PATH}/admin/settings`);
 							show = false;
 						}}
 					>

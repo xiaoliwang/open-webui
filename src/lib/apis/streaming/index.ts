@@ -72,7 +72,8 @@ async function* openAIStreamToIterator(
 			yield {
 				done: false,
 				value: parsedData.choices?.[0]?.delta?.content ?? '',
-				usage: parsedData.usage
+				usage: parsedData.usage,
+				requestId: parsedData.id
 			};
 		} catch (e) {
 			console.error('Error extracting delta from SSE event:', e);

@@ -5,6 +5,7 @@
 
 	import { onMount, getContext } from 'svelte';
 	import { page } from '$app/stores';
+	import { WEBUI_BASE_PATH, WEBUI_BASE_URL } from '$lib/constants';
 	import { settings, user, config, models, tools, functions } from '$lib/stores';
 	import { splitStream } from '$lib/utils';
 
@@ -46,7 +47,7 @@
 		base_model_id: null,
 		name: '',
 		meta: {
-			profile_image_url: '/static/favicon.png',
+			profile_image_url: `${WEBUI_BASE_URL}/static/favicon.png`,
 			description: '',
 			suggestion_prompts: null,
 			tags: []
@@ -108,7 +109,7 @@
 		if (res) {
 			await models.set(await getModels(localStorage.token));
 			toast.success($i18n.t('Model updated successfully'));
-			await goto('/workspace/models');
+			await goto(`${WEBUI_BASE_PATH}/workspace/models`);
 		}
 
 		loading = false;
@@ -171,10 +172,10 @@
 
 				console.log(model);
 			} else {
-				goto('/workspace/models');
+				goto(`${WEBUI_BASE_PATH}/workspace/models`);
 			}
 		} else {
-			goto('/workspace/models');
+			goto(`${WEBUI_BASE_PATH}/workspace/models`);
 		}
 	});
 </script>
@@ -248,7 +249,7 @@
 	<button
 		class="flex space-x-1"
 		on:click={() => {
-			goto('/workspace/models');
+			goto(`${WEBUI_BASE_PATH}/workspace/models`);
 		}}
 	>
 		<div class=" self-center">
