@@ -425,6 +425,7 @@
 	"PDF document (.pdf)": "PDF 文档 (.pdf)",
 	"PDF Extract Images (OCR)": "PDF 图像处理 (使用 OCR)",
 	"pending": "待激活",
+	"visitor": "访客",
 	"Permission denied when accessing media devices": "申请媒体设备权限被拒绝",
 	"Permission denied when accessing microphone": "申请麦克风权限被拒绝",
 	"Permission denied when accessing microphone: {{error}}": "申请麦克风权限被拒绝：{{error}}",
