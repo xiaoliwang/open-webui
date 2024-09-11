@@ -235,7 +235,7 @@ class ChatTable:
         limit: int = 50,
     ) -> List[ChatModel]:
         with get_db() as db:
-            query = db.query(Chat).filter_by(user_id=user_id)
+            query = db.query(Chat)
             if not include_archived:
                 query = query.filter_by(archived=False)
             all_chats = (
@@ -284,7 +284,7 @@ class ChatTable:
         try:
             with get_db() as db:
 
-                chat = db.query(Chat).filter_by(id=id, user_id=user_id).first()
+                chat = db.query(Chat).filter_by(id=id).first()
                 return ChatModel.model_validate(chat)
         except:
             return None

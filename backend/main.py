@@ -60,6 +60,7 @@ from apps.webui.models.models import Models
 from apps.webui.models.tools import Tools
 from apps.webui.models.functions import Functions
 from apps.webui.models.users import Users
+from apps.webui.models.chats import Chats
 
 from apps.webui.utils import load_toolkit_module_by_id, load_function_module_by_id
 
@@ -626,7 +627,7 @@ class ChatCompletionMiddleware(BaseHTTPMiddleware):
             chat_id = None
             if "chat_id" in body:
                 chat_id = body["chat_id"]
-                del body["chat_id"]
+                # del body["chat_id"]
             message_id = None
             if "id" in body:
                 message_id = body["id"]
@@ -1030,6 +1031,14 @@ async def get_models(user=Depends(get_verified_user)):
 
 @app.post("/api/chat/completions")
 async def generate_chat_completions(form_data: dict, user=Depends(get_verified_user)):
+    chat_id = form_data['chat_id']
+    del form_data['chat_id']
+    chat = Chats.get_chat_by_id_and_user_id(chat_id, user.id)
+    if not chat or chat.user_id != user.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="You do not have access to this chat",
+        )
     model_id = form_data["model"]
     if model_id not in app.state.MODELS:
         raise HTTPException(
