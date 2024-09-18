@@ -17,6 +17,7 @@
 		activeUserCount,
 		USAGE_POOL
 	} from '$lib/stores';
+	import { __canvasWM } from '$lib/tool';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Toaster, toast } from 'svelte-sonner';
@@ -160,6 +161,8 @@
 		}
 
 		await tick();
+		// 后续时间改成服务器下发时间，并添加加上 hash
+		__canvasWM({ content: $user.name, content_hash: Date.now() });
 
 		if (
 			document.documentElement.classList.contains('her') &&
