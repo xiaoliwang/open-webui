@@ -1,8 +1,10 @@
 <script lang="ts">
+
 	import { WEBUI_BASE_URL } from '$lib/constants';
 	import { marked } from 'marked';
 
 	import { config, user, models as _models } from '$lib/stores';
+	import { __canvasWM } from '$lib/tool';
 	import { onMount, getContext } from 'svelte';
 
 	import { blur, fade } from 'svelte/transition';
@@ -26,9 +28,10 @@
 	}
 
 	$: models = modelIds.map((id) => $_models.find((m) => m.id === id));
-
 	onMount(() => {
 		mounted = true;
+		// 后续时间改成服务器下发时间，并添加加上 hash
+		__canvasWM({ content: $user.name, content_hash: Date.now() });
 	});
 </script>
 

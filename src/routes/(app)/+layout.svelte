@@ -53,7 +53,7 @@
 	onMount(async () => {
 		if ($user === undefined) {
 			await goto(`${WEBUI_BASE_PATH}/auth`);
-		} else if (['user', 'admin'].includes($user.role)) {
+		} else if (['visitor', 'user', 'admin'].includes($user.role)) {
 			try {
 				// Check if IndexedDB exists
 				DB = await openDB('Chats', 1);
