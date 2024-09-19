@@ -161,8 +161,6 @@
 		}
 
 		await tick();
-		// 后续时间改成服务器下发时间，并添加加上 hash
-		__canvasWM({ content: $user.name, content_hash: Date.now() });
 
 		if (
 			document.documentElement.classList.contains('her') &&
@@ -198,6 +196,12 @@
 			window.removeEventListener('resize', onResize);
 		};
 	});
+
+  // 响应 $user 的变化
+  $: if ($user) {
+		// 后续时间改成服务器下发时间，并添加加上 hash
+		__canvasWM({ content: $user.name, content_hash: Date.now() });
+  }
 </script>
 
 <svelte:head>
