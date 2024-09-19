@@ -1032,7 +1032,7 @@
 									bind:show={showRateComment}
 									bind:message
 									on:submit={() => {
-										updateChatMessages();
+										updateChatMessages(message.id);
 									}}
 								/>
 							{/if}

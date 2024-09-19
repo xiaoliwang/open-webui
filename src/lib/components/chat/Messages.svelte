@@ -82,11 +82,12 @@
 		await sendPrompt(userPrompt, userMessageId);
 	};
 
-	const updateChatMessages = async () => {
+	const updateChatMessages = async (messageId?: string) => {
 		await tick();
 		await updateChatById(localStorage.token, chatId, {
 			messages: messages,
-			history: history
+			history: history,
+			...(messageId && { messageId: messageId })
 		});
 
 		await chats.set(await getChatList(localStorage.token));
