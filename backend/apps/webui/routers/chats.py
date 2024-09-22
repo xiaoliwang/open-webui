@@ -8,6 +8,7 @@ import json
 import logging
 
 from apps.webui.models.users import Users
+from apps.webui.models.annotations import Annotations
 from apps.webui.models.chats import (
     ChatModel,
     ChatResponse,
@@ -16,7 +17,6 @@ from apps.webui.models.chats import (
     ChatTitleIdResponse,
     Chats,
 )
-
 
 from apps.webui.models.tags import (
     TagModel,
@@ -271,6 +271,13 @@ async def update_chat_by_id(
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
     if chat:
         updated_chat = {**json.loads(chat.chat), **form_data.chat}
+        if 'messageId' in updated_chat:
+            current_id = updated_chat['messageId']
+            messages = updated_chat.get('messages', [])
+            for message in messages:
+                if message.get('id') == current_id:
+                    annotation = message.get('annotation', {})
+                    Annotations.insert_or_update_annotation(user.id, id, current_id, annotation)
 
         chat = Chats.update_chat_by_id(id, updated_chat)
         return ChatResponse(**{**chat.model_dump(), "chat": json.loads(chat.chat)})
