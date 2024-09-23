@@ -16,6 +16,7 @@ from apps.webui.models.chats import (
     ChatForm,
     ChatTitleIdResponse,
     Chats,
+    update_chat_with_annotations,
 )
 
 from apps.webui.models.tags import (
@@ -251,6 +252,8 @@ async def get_all_tags(user=Depends(get_verified_user)):
 async def get_chat_by_id(id: str, user=Depends(get_verified_user)):
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
 
+    update_chat_with_annotations(id, user.id, chat)
+
     if chat:
         return ChatResponse(**{**chat.model_dump(), "chat": json.loads(chat.chat)})
     else:
@@ -276,17 +279,19 @@ async def update_chat_by_id(
             messages = updated_chat.get('messages', [])
             for message in messages:
                 if message.get('id') == current_id:
-                    annotation = message.get('annotation', {})
+                    annotation = message.pop('annotation', {})
                     Annotations.insert_or_update_annotation(user.id, id, current_id, annotation)
 
         chat = Chats.update_chat_by_id(id, updated_chat)
+
+        update_chat_with_annotations(id, user.id, chat)
+
         return ChatResponse(**{**chat.model_dump(), "chat": json.loads(chat.chat)})
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
         )
-
 
 ############################
 # DeleteChatById

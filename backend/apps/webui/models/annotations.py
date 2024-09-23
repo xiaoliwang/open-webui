@@ -42,8 +42,12 @@ class AnnotationModel(BaseModel):
 
 class AnnotationTable:
     def insert_or_update_annotation(self, user_id: str, chat_id: str, message_id: str, annotation):
-        with get_db() as db:
-            existing_annotation = db.query(Annotation).filter_by(user_id=user_id, message_id=message_id).first()
+        with (get_db() as db):
+            existing_annotation = (
+                db.query(Annotation)
+                .filter_by(user_id=user_id, message_id=message_id)
+                .first()
+            )
             if existing_annotation:
                 existing_annotation.annotation = json.dumps(annotation)
                 existing_annotation.updated_at = int(time.time())
@@ -69,6 +73,24 @@ class AnnotationTable:
                 db.commit()
                 db.refresh(result)
                 return AnnotationModel.model_validate(result) if result else None
+
+    def get_annotation_map_by_chat_id_and_user_id(self, chat_id: str, user_id: str):
+        annotation_list = self.get_annotation_list_by_chat_id_and_user_id(chat_id, user_id)
+        if annotation_list is None:
+            return None
+        return {ann.message_id: json.loads(ann.annotation) for ann in annotation_list}
+
+    def get_annotation_list_by_chat_id_and_user_id(self, chat_id: str, user_id: str):
+        try:
+            with get_db() as db:
+                all_annotations = (
+                    db.query(Annotation)
+                    .filter_by(chat_id=chat_id, user_id=user_id)
+                    .all()
+                )
+                return [AnnotationModel.model_validate(annotation) for annotation in all_annotations]
+        except Exception as e:
+            return None
 
 # 创建 annotation 表
 # Base.metadata.create_all(engine)

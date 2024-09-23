@@ -9,6 +9,7 @@ from sqlalchemy import Column, String, BigInteger, Boolean, Text
 
 from apps.webui.internal.db import Base, get_db
 
+from apps.webui.models.annotations import Annotations
 
 ####################
 # Chat DB Schema
@@ -370,5 +371,24 @@ class ChatTable:
         except:
             return False
 
+def add_annotation_to_messages(messages, annotation_map):
+    if isinstance(messages, dict):
+        for message_id, message in messages.items():
+            if message_id in annotation_map:
+                message['annotation'] = annotation_map[message_id]
+    elif isinstance(messages, list):
+        for message in messages:
+            message_id = message['id']
+            if message_id in annotation_map:
+                message['annotation'] = annotation_map[message_id]
+
+def update_chat_with_annotations(chat_id, user_id, chat):
+    annotation_map = Annotations.get_annotation_map_by_chat_id_and_user_id(chat_id, user_id)
+    chat_data = json.loads(chat.chat)
+
+    for messages in [chat_data['messages'], chat_data['history']['messages']]:
+        add_annotation_to_messages(messages, annotation_map)
+
+    chat.chat = json.dumps(chat_data)
 
 Chats = ChatTable()
