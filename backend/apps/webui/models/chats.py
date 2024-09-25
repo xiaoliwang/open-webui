@@ -376,11 +376,15 @@ def add_annotation_to_messages(messages, annotation_map):
         for message_id, message in messages.items():
             if message_id in annotation_map:
                 message['annotation'] = annotation_map[message_id]
+            else:
+                message.pop('annotation', None)
     elif isinstance(messages, list):
         for message in messages:
             message_id = message['id']
             if message_id in annotation_map:
                 message['annotation'] = annotation_map[message_id]
+            else:
+                message.pop('annotation', None)
 
 def update_chat_with_annotations(chat_id, user_id, chat):
     annotation_map = Annotations.get_annotation_map_by_chat_id_and_user_id(chat_id, user_id)
