@@ -11,10 +11,23 @@
 	export let show = false;
 	export let message;
 
+	let REAL_REASONS = [];
 	let LIKE_REASONS = [];
 	let DISLIKE_REASONS = [];
 
 	function loadReasons() {
+		REAL_REASONS = [
+			"人设不符",
+			"记忆错误",
+			"逻辑\\幻觉",
+			"误解提问意图",
+			"事实性错误",
+			"无交互感",
+			"情绪错误",
+			"尺度判断有误",
+			"其他"
+		];
+
 		LIKE_REASONS = [
 			$i18n.t('Accurate information'),
 			$i18n.t('Followed instructions perfectly'),
@@ -39,8 +52,8 @@
 	let selectedReason = null;
 	let comment = '';
 
-	$: if (message?.annotation?.rating === 1) {
-		reasons = LIKE_REASONS;
+	$: if (message?.annotation?.rating >= 1 && message?.annotation?.rating <= 5) {
+		reasons = REAL_REASONS;
 	} else if (message?.annotation?.rating === -1) {
 		reasons = DISLIKE_REASONS;
 	}
