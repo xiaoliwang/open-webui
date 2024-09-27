@@ -80,6 +80,18 @@ class AnnotationTable:
             return None
         return {ann.message_id: json.loads(ann.annotation) for ann in annotation_list}
 
+    def get_annotation_list_by_chat_id(self, chat_id: str):
+        try:
+            with get_db() as db:
+                all_annotations = (
+                    db.query(Annotation)
+                    .filter_by(chat_id=chat_id)
+                    .all()
+                )
+                return [AnnotationModel.model_validate(annotation) for annotation in all_annotations]
+        except Exception as e:
+            return None
+
     def get_annotation_list_by_chat_id_and_user_id(self, chat_id: str, user_id: str):
         try:
             with get_db() as db:

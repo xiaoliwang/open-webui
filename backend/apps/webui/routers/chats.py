@@ -1,4 +1,5 @@
 from fastapi import Depends, Request, HTTPException, status
+from fastapi.responses import StreamingResponse
 from datetime import datetime, timedelta
 from typing import List, Union, Optional
 from utils.utils import get_verified_user, get_admin_user
@@ -6,6 +7,9 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import json
 import logging
+
+import csv
+from io import StringIO
 
 from apps.webui.models.users import Users
 from apps.webui.models.annotations import Annotations
@@ -292,6 +296,47 @@ async def update_chat_by_id(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
         )
+
+############################
+# ExportChatById
+############################
+
+
+@router.get("/{id}/export", response_model=str)
+async def export_chat_by_id(request: Request, id: str, user=Depends(get_verified_user)):
+    try:
+        if user.role == "admin":
+            chat = Chats.get_chat_by_id_and_user_id(id, user.id)
+            annotations = Annotations.get_annotation_list_by_chat_id(id)
+
+            output = StringIO()
+            writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator='\n')
+
+            # 假设 chat 是一个字典或者包含你需要导出的字段
+            writer.writerow(["Q", "A", "星级", "标签", "反馈"])  # CSV 文件头
+            for annotation_datum in annotations:
+                chat_data = json.loads(chat.chat)
+                message = chat_data['history']['messages'][annotation_datum.message_id]
+                content = message['content']
+                parent_content = chat_data['history']['messages'][message['parentId']]['content']
+                annotation = json.loads(annotation_datum.annotation)
+                if annotation:
+                    writer.writerow([parent_content, content, annotation.get('rating', 0), annotation.get('reason', 0), annotation.get('comment', 0)])
+
+            output.seek(0)  # 将 StringIO 的指针移动到开始位置
+
+            # 返回 CSV 文件
+            return StreamingResponse(output, media_type="text/csv", headers={
+                "Content-Disposition": f"attachment; filename=chat_{id}.csv"
+            })
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
+            )
+    except Exception as err:
+        print(err)
+
 
 ############################
 # DeleteChatById
