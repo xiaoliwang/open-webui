@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, parse_obj_as
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Dict
 import time
 
 from sqlalchemy import String, Column, BigInteger, Text
@@ -265,5 +265,12 @@ class UsersTable:
         except Exception as e:
             return None
 
+    def get_user_map_by_ids(self, ids: List[str]) -> Optional[Dict[str, str]]:
+        try:
+            with get_db() as db:
+                users = db.query(User.id, User.name).filter(User.id.in_(ids)).all()
+                return {user.id: user.name for user in users}
+        except Exception as e:
+            return {}
 
 Users = UsersTable()
