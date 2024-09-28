@@ -10,6 +10,7 @@
 	import {
 		archiveChatById,
 		cloneChatById,
+		exportAnnotationById,
 		deleteChatById,
 		getChatList,
 		getChatListByTagName,
@@ -45,6 +46,13 @@
 			await pinnedChats.set(await getChatListByTagName(localStorage.token, 'pinned'));
 		}
 	};
+
+	const exportAnnotationHandler = async (id) => {
+		await exportAnnotationById(localStorage.token, id).catch((error) => {
+			toast.error(error);
+			return null;
+		})
+	}
 
 	const cloneChatHandler = async (id) => {
 		const res = await cloneChatById(localStorage.token, id).catch((error) => {
@@ -231,6 +239,9 @@
 						chatTitle = chat.title;
 
 						confirmEdit = true;
+					}}
+					exportAnnotationHandler={() => {
+						exportAnnotationHandler(chat.id)
 					}}
 					deleteHandler={() => {
 						dispatch('delete');
