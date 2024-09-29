@@ -1031,14 +1031,15 @@ async def get_models(user=Depends(get_verified_user)):
 
 @app.post("/api/chat/completions")
 async def generate_chat_completions(form_data: dict, user=Depends(get_verified_user)):
-    chat_id = form_data['chat_id']
-    del form_data['chat_id']
-    chat = Chats.get_chat_by_id_and_user_id(chat_id, user.id)
-    if not chat or chat.user_id != user.id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="You do not have access to this chat",
-        )
+    if 'chat_id' in form_data:
+        chat_id = form_data['chat_id']
+        del form_data['chat_id']
+        chat = Chats.get_chat_by_id_and_user_id(chat_id, user.id)
+        if not chat or chat.user_id != user.id:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="You do not have access to this chat",
+            )
     model_id = form_data["model"]
     if model_id not in app.state.MODELS:
         raise HTTPException(
