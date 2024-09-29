@@ -374,8 +374,16 @@ export const exportAnnotationById = async (token: string, id: string) => {
 		})
 		.then(async(blob) => {
 			const url = window.URL.createObjectURL(blob)
-			window.open(url)
-			window.URL.revokeObjectURL(url)
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = `chat_${id}.csv`;  // 设置下载文件的名称
+			// 将 <a> 元素添加到 DOM，触发点击事件后再移除
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+
+			// 释放 Blob URL
+			window.URL.revokeObjectURL(url);
 		})
 		.catch((err) => {
 				error = err;
