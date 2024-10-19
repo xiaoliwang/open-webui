@@ -21,6 +21,7 @@ import requests
 import hashlib
 from pathlib import Path
 import json
+import re
 
 from constants import ERROR_MESSAGES
 from utils.utils import (
@@ -203,14 +204,16 @@ async def speech(request: Request, user=Depends(get_verified_user)):
         body = json.loads(body)
 
         voice_map = {
-            '（撩拨）': 'onyx',
-            '（宠溺）': 'nova',
+            '撩拨': 'onyx',
+            '宠溺': 'nova',
         }
 
-        # TODO: 临时方案，后续需要优化调整。
-        prefix = body['input'][:4]
-        print(prefix)
-        body['voice'] = voice_map.get(prefix, 'echo')
+        match = re.match(r'^（(.*?)）', body['input'])
+        if match:
+            body['voice'] = voice_map.get(match.group(1), 'echo')
+            body['input'] = body['input'][match.end():].lstrip()
+        else:
+            body['voice'] = 'echo'
         print(body)
 
         body["model"] = app.state.config.TTS_MODEL
