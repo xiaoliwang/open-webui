@@ -201,6 +201,18 @@ async def speech(request: Request, user=Depends(get_verified_user)):
     try:
         body = body.decode("utf-8")
         body = json.loads(body)
+
+        voice_map = {
+            '（撩拨）': 'onyx',
+            '（宠溺）': 'nova',
+        }
+
+        # TODO: 临时方案，后续需要优化调整。
+        prefix = body['input'][:4]
+        print(prefix)
+        body['voice'] = voice_map.get(prefix, 'echo')
+        print(body)
+
         body["model"] = app.state.config.TTS_MODEL
         body = json.dumps(body).encode("utf-8")
     except Exception as e:
