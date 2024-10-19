@@ -383,6 +383,25 @@
 			querySelector: '.mermaid'
 		});
 	});
+
+	function handleRating(message, rating) {
+		rateMessage(message.id, rating);
+		showRateComment = true;
+		window.setTimeout(() => {
+			document
+				.getElementById(`message-feedback-${message.id}`)
+				?.scrollIntoView();
+		}, 0);
+	}
+
+	const ratings = [
+		{ id: 1, circles : [{ cx: 12, cy: 12 }] },
+		{ id: 2, circles : [{ cx: 8, cy: 8 }, { cx: 16, cy: 16 }] },
+		{ id: 3, circles : [{ cx: 8, cy: 8 }, { cx: 12, cy: 12 }, { cx: 16, cy: 16 }] },
+		{ id: 4, circles : [{ cx: 8, cy: 8 }, { cx: 8, cy: 16 }, { cx: 16, cy: 8 }, { cx: 16, cy: 16 }] },
+		{ id: 5, circles : [{ cx: 8, cy: 8 }, { cx: 8, cy: 16 }, { cx: 12, cy: 12 }, { cx: 16, cy: 8 }, { cx: 16, cy: 16 }] }
+	];
+
 </script>
 
 <CitationsModal bind:show={showCitationModal} citation={selectedCitation} />
@@ -891,188 +910,26 @@
 										{/if}
 
 										{#if !readOnly}
-											<Tooltip content={$i18n.t('Good Response')} placement="bottom">
-												<button
-													class="{isLastMessage
-														? 'visible'
-														: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(message
-														?.annotation?.rating ?? null) === 1
-														? 'bg-gray-100 dark:bg-gray-800'
-														: ''} dark:hover:text-white hover:text-black transition"
-													on:click={() => {
-														rateMessage(message.id, 1);
-														showRateComment = true;
-
-														window.setTimeout(() => {
-															document
-																.getElementById(`message-feedback-${message.id}`)
-																?.scrollIntoView();
-														}, 0);
-													}}
-												>
-													<svg
-														stroke="currentColor"
-														fill="none"
-														stroke-width="2.3"
-														viewBox="0 0 24 24"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														class="w-4 h-4"
-														xmlns="http://www.w3.org/2000/svg"
+											{#each ratings as rating}
+												<Tooltip content={$i18n.t(rating.id <= 2 ? 'Bad Response' : 'Good Response')} placement="bottom">
+													<button
+														class="{isLastMessage ? 'visible' : 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg
+														{(message ?.annotation?.rating ?? null) === rating.id ? 'bg-gray-100 dark:bg-gray-800' : ''} dark:hover:text-white hover:text-black transition"
+															on:click={() => handleRating(message, rating.id)}
 														>
-															<rect x="4" y="4" width="16" height="16" stroke="#000" />
-    													<circle cx="12" cy="12" r="1.5" fill="#000" /></svg
-													>
-												</button>
-											</Tooltip>
-
-											<Tooltip content={$i18n.t('Good Response')} placement="bottom">
-												<button
-													class="{isLastMessage
-														? 'visible'
-														: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(message
-														?.annotation?.rating ?? null) === 2
-														? 'bg-gray-100 dark:bg-gray-800'
-														: ''} dark:hover:text-white hover:text-black transition"
-													on:click={() => {
-														rateMessage(message.id, 2);
-														showRateComment = true;
-
-
-														window.setTimeout(() => {
-															document
-																.getElementById(`message-feedback-${message.id}`)
-																?.scrollIntoView();
-														}, 0);
-													}}
-												>
-													<svg
-														stroke="currentColor"
-														fill="none"
-														stroke-width="2.3"
-														viewBox="0 0 24 24"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														class="w-4 h-4"
-														xmlns="http://www.w3.org/2000/svg"
-														>
-															<rect x="4" y="4" width="16" height="16" stroke="#000" />
-															<circle cx="8" cy="8" r="1.5" fill="#000" />
-															<circle cx="16" cy="16" r="1.5" fill="#000" /></svg
-													>
-												</button>
-											</Tooltip>
-
-											<Tooltip content={$i18n.t('Bad Response')} placement="bottom">
-												<button
-													class="{isLastMessage
-														? 'visible'
-														: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(message
-														?.annotation?.rating ?? null) === 3
-														? 'bg-gray-100 dark:bg-gray-800'
-														: ''} dark:hover:text-white hover:text-black transition"
-													on:click={() => {
-														rateMessage(message.id, 3);
-														showRateComment = true;
-														window.setTimeout(() => {
-															document
-																.getElementById(`message-feedback-${message.id}`)
-																?.scrollIntoView();
-														}, 0);
-													}}
-												>
-													<svg
-														stroke="currentColor"
-														fill="none"
-														stroke-width="2.3"
-														viewBox="0 0 24 24"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														class="w-4 h-4"
-														xmlns="http://www.w3.org/2000/svg"
-														><rect x="4" y="4" width="16" height="16" stroke="#000" />
-															<circle cx="8" cy="8" r="1.5" fill="#000" />
-															<circle cx="12" cy="12" r="1.5" fill="#000" />
-															<circle cx="16" cy="16" r="1.5" fill="#000" /></svg
-													>
-												</button>
-											</Tooltip>
-
-											<Tooltip content={$i18n.t('Good Response')} placement="bottom">
-												<button
-													class="{isLastMessage
-														? 'visible'
-														: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(message
-														?.annotation?.rating ?? null) === 4
-														? 'bg-gray-100 dark:bg-gray-800'
-														: ''} dark:hover:text-white hover:text-black transition"
-													on:click={() => {
-														rateMessage(message.id, 4);
-														showRateComment = true;
-
-														window.setTimeout(() => {
-															document
-																.getElementById(`message-feedback-${message.id}`)
-																?.scrollIntoView();
-														}, 0);
-													}}
-												>
-													<svg
-														stroke="currentColor"
-														fill="none"
-														stroke-width="2.3"
-														viewBox="0 0 24 24"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														class="w-4 h-4"
-														xmlns="http://www.w3.org/2000/svg"
-														>
-														<rect x="4" y="4" width="16" height="16" stroke="#000" />
-															<circle cx="8" cy="8" r="1.5" fill="#000" />
-															<circle cx="8" cy="16" r="1.5" fill="#000" />
-															<circle cx="16" cy="8" r="1.5" fill="#000" />
-															<circle cx="16" cy="16" r="1.5" fill="#000" /></svg
-													>
-												</button>
-											</Tooltip>
-
-											<Tooltip content={$i18n.t('Bad Response')} placement="bottom">
-												<button
-													class="{isLastMessage
-														? 'visible'
-														: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(message
-														?.annotation?.rating ?? null) === 5
-														? 'bg-gray-100 dark:bg-gray-800'
-														: ''} dark:hover:text-white hover:text-black transition"
-													on:click={() => {
-														rateMessage(message.id, 5);
-														showRateComment = true;
-														window.setTimeout(() => {
-															document
-																.getElementById(`message-feedback-${message.id}`)
-																?.scrollIntoView();
-														}, 0);
-													}}
-												>
-													<svg
-														stroke="currentColor"
-														fill="none"
-														stroke-width="2.3"
-														viewBox="0 0 24 24"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														class="w-4 h-4"
-														xmlns="http://www.w3.org/2000/svg"
-														><rect x="4" y="4" width="16" height="16" stroke="#000" />
-															<circle cx="8" cy="8" r="1.5" fill="#000" />
-															<circle cx="8" cy="16" r="1.5" fill="#000" />
-															<circle cx="12" cy="12" r="1.5" fill="#000" />
-															<circle cx="16" cy="8" r="1.5" fill="#000" />
-															<circle cx="16" cy="16" r="1.5" fill="#000" /></svg
-													>
-												</button>
-											</Tooltip>
-
+															<svg
+																stroke="currentColor" fill="none" stroke-width="2.3" viewBox="0 0 24 24"
+																stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg"
+															>
+																<rect x="4" y="4" width="16" height="16" stroke="#000" />
+																{#each rating.circles as circle}
+																	<circle cx={circle.cx} cy={circle.cy} r="1.5" fill="#000" />
+        												{/each}
+															</svg>
+														</button>
+												</Tooltip>
+											{/each}
+											
 											{#if isLastMessage}
 												<Tooltip content={$i18n.t('Continue Response')} placement="bottom">
 													<button
