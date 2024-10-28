@@ -388,11 +388,12 @@ def add_annotation_to_messages(messages, annotation_map):
 
 def update_chat_with_annotations(chat_id, user_id, chat):
     annotation_map = Annotations.get_annotation_map_by_chat_id_and_user_id(chat_id, user_id)
-    chat_data = json.loads(chat.chat)
+    if annotation_map:
+        chat_data = json.loads(chat.chat)
 
-    for messages in [chat_data['messages'], chat_data['history']['messages']]:
-        add_annotation_to_messages(messages, annotation_map)
+        for messages in [chat_data['messages'], chat_data['history']['messages']]:
+            add_annotation_to_messages(messages, annotation_map)
 
-    chat.chat = json.dumps(chat_data)
+        chat.chat = json.dumps(chat_data)
 
 Chats = ChatTable()
