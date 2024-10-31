@@ -203,17 +203,13 @@ async def speech(request: Request, user=Depends(get_verified_user)):
         body = body.decode("utf-8")
         body = json.loads(body)
 
-        voice_map = {
-            '撩拨': 'onyx',
-            '宠溺': 'nova',
-        }
-
+        voice_set = {'日常','低语','撩拨','吃醋','开心','撒娇','失落','宠溺','深情','紧张'}
         match = re.match(r'^（(.*?)）', body['input'])
         if match:
-            body['voice'] = voice_map.get(match.group(1), 'echo')
+            body['voice'] = match.group(1) if match.group(1) in voice_set else '日常'
             body['input'] = body['input'][match.end():].lstrip()
         else:
-            body['voice'] = 'echo'
+            body['voice'] = '日常'
         print(body)
 
         body["model"] = app.state.config.TTS_MODEL
