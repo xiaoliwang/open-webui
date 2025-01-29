@@ -214,6 +214,7 @@
 				bind:value={system}
 				class="w-full rounded-lg p-4 text-sm dark:text-gray-300 dark:bg-gray-850 outline-none resize-none"
 				rows="4"
+				style="resize: vertical;"
 			/>
 		</div>
 
