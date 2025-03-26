@@ -661,6 +661,17 @@
 					baseMessage.images = imageUrls;
 				}
 				return baseMessage;
+			})
+			.map((message, idx, arr) => {
+				if (message.role === 'assistant') {
+					const parts = message.content.split(/<\/think>[\s]*/)
+					if (parts.length > 1) {
+						const m = { ...message }
+						m.content = parts[parts.length - 1]
+						return m
+					}
+				}
+				return message
 			});
 
 		let lastImageIndex = -1;
@@ -989,6 +1000,17 @@
 						...messages
 					]
 						.filter((message) => message?.content?.trim())
+						.map((message, idx, arr) => {
+							if (message.role === 'assistant') {
+								const parts = message.content.split(/<\/think>[\s]*/)
+								if (parts.length > 1) {
+									const m = { ...message }
+									m.content = parts[parts.length - 1]
+									return m
+								}
+							}
+							return message
+						})
 						.map((message, idx, arr) => ({
 							role: message.role,
 							...((message.files?.filter((file) => file.type === 'image').length > 0 ?? false) &&

@@ -200,7 +200,15 @@
   // 响应 $user 的变化
   $: if ($user) {
 		// 后续时间改成服务器下发时间，并添加加上 hash
-		__canvasWM({ content: $user.name, content_hash: Date.now() });
+                const d = new Date(); // 获取当前日期和时间
+                const year = d.getFullYear(); // 获取年份（四位数）
+                const month = d.getMonth() + 1; // 获取月份（0-11，需要 +1）
+                const day = d.getDate(); // 获取日期（1-31）
+                const hours = d.getHours(); // 获取小时（0-23）
+                const minutes = d.getMinutes(); // 获取分钟（0-59）
+                const seconds = d.getSeconds(); // 获取秒数（0-59）
+                const ii = function (s) { s = s.toString(); while (s.length < 2) s = '0' + s; return s; };
+		__canvasWM({ content: $user.name, content_hash: `${year}-${ii(month)}-${ii(day)} ${ii(hours)}:${ii(minutes)}:${ii(seconds)}` });
   }
 </script>
 
