@@ -30,7 +30,8 @@
 				<textarea
 					bind:value={params.system}
 					class="w-full rounded-lg px-4 py-3 text-sm dark:text-gray-300 dark:bg-gray-850 border border-gray-100 dark:border-gray-800 outline-none resize-none"
-					rows="3"
+					rows="4"
+					style="resize: vertical;"
 					placeholder="Enter system prompt"
 				/>
 			</div>

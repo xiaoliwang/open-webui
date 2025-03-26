@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Response, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse, FileResponse
+from ssl import CERT_NONE, create_default_context
 
 import requests
 import aiohttp
@@ -187,13 +188,18 @@ async def speech(request: Request, user=Depends(get_verified_user)):
 
 async def fetch_url(url, key):
     timeout = aiohttp.ClientTimeout(total=5)
+    # 创建一个 SSL 上下文，禁用证书验证
+    ssl_context = create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = CERT_NONE
     try:
         headers = {"Authorization": f"Bearer {key}"}
         async with aiohttp.ClientSession(timeout=timeout, trust_env=True) as session:
-            async with session.get(url, headers=headers) as response:
+            async with session.get(url, headers=headers, ssl=ssl_context) as response:
                 return await response.json()
     except Exception as e:
         # Handle connection error here
+        print(e)
         log.error(f"Connection error: {e}")
         return None
 
@@ -321,7 +327,7 @@ async def get_models(url_idx: Optional[int] = None, user=Depends(get_verified_us
         r = None
 
         try:
-            r = requests.request(method="GET", url=f"{url}/models", headers=headers)
+            r = requests.request(method="GET", url=f"{url}/models", headers=headers, timeout=5)
             r.raise_for_status()
 
             response_data = r.json()
@@ -472,6 +478,7 @@ async def generate_chat_completion(
             url=f"{url}/chat/completions",
             data=payload,
             headers=headers,
+            ssl=False,
         )
 
         r.raise_for_status()

@@ -1,11 +1,28 @@
 #!/usr/bin/env bash
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/ai/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/ai/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/ai/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/ai/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+conda activate open-webui-env
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR" || exit
 
 KEY_FILE=.webui_secret_key
 
-PORT="${PORT:-8080}"
+PORT="${PORT:-3002}"
 HOST="${HOST:-0.0.0.0}"
 if test "$WEBUI_SECRET_KEY $WEBUI_JWT_SECRET_KEY" = " "; then
   echo "Loading WEBUI_SECRET_KEY from file, not provided as an environment variable."
@@ -55,4 +72,8 @@ if [ -n "$SPACE_ID" ]; then
   export WEBUI_URL=${SPACE_HOST}
 fi
 
-WEBUI_SECRET_KEY="$WEBUI_SECRET_KEY" exec uvicorn main:app --host "$HOST" --port "$PORT" --forwarded-allow-ips '*'
+export DATABASE_URL='mysql+pymysql://open_webui:Ud_meuAKgdykS-7p@127.0.0.1:3306/open_webui'
+export WEBUI_SECRET_KEY='OzHWxRL1H5wI6/t4'
+
+WEBUI_SECRET_KEY="$WEBUI_SECRET_KEY" uvicorn main:app --host "$HOST" --port "$PORT" --forwarded-allow-ips '*' --log-level debug 
+echo "$?"
